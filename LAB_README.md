@@ -2,6 +2,8 @@
 
 **Student:** Jayaprakash · **BITS ID:** 2025AE05611
 
+**Lab execution report:** [PDF](reports/Lab_Run_Report_Jayaprakash_2025AE05611.pdf) · [DOCX](reports/Lab_Run_Report_Jayaprakash_2025AE05611.docx) · [Markdown](reports/LAB_RUN_REPORT.md)
+
 This folder is a clean copy of the project. Models, MLflow runs and figures are **not** included, so the lab VM regenerates everything from scratch. That shows the pipeline is reproducible on a fresh machine.
 
 ## 1. Open the lab
