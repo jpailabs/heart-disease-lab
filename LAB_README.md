@@ -54,3 +54,35 @@ Works on the Prayogshala Rocky Linux 9 image (dnf) and on Ubuntu (apt). It insta
 ## 6. Before leaving
 - Run `./run_lab.sh save` so the results are copied to `~/workspace`.
 - Use **Stop VM** to resume later, or **Terminate VM** when you're finished.
+
+## Lab run evidence (Prayogshala VM, 19 Oct 2026)
+
+The full pipeline was run on the Prayogshala virtual lab: Rocky Linux 9.5, 4 vCPU, 15 GB RAM, user `s2025ae05611`. The results matched the original runs exactly (CV ROC-AUC 0.9075, test ROC-AUC 0.9589), which confirms reproducibility on a clean machine.
+
+| # | Screenshot | Shows |
+|---|---|---|
+| 00 | `lab_00_vm_desktop.png` | Prayogshala virtual desktop |
+| 01 | `lab_01_clone_repo.png` | repository cloned in the lab |
+| 02 | `lab_02a_setup_install.png`, `lab_02b_setup_tools_ready.png` | `lab_setup.sh`: dnf packages, kubectl, kind, Docker ready |
+| 03 | `lab_03_python_env.png` | clean venv from `requirements.txt` (1 min 21 s) |
+| 04 | `lab_04_data_download.png` | UCI download and cleaning (303 rows) |
+| 05 | `lab_05_eda.png` | EDA figures and summary stats |
+| 06 | `lab_06_training_mlflow.png` | tuning 3 models, MLflow tracking, model registry v1 |
+| 07 | `lab_07a_lint_tests.png`, `lab_07b_tests_coverage.png` | flake8 clean; 22/22 pytest passed with coverage |
+| 08 | `lab_08_docker_build_run.png` | Docker image build, container run, `/predict` |
+| 09 | `lab_09_kubernetes_deploy.png` | kind cluster, ingress-nginx, 2 API replicas, Prometheus and Grafana |
+| 10 | `lab_10_smoke_test_logs.png` | 100/100 predictions via Ingress, 422 validation, JSON request logs |
+| 11 | `lab_11_kubectl_status.png` | `kubectl get all,ingress` and monitoring pods |
+| 12 | `lab_12_mlflow_experiment.png` | MLflow experiment (80 runs) |
+| 13 | `lab_13a/b/c_*.png` | selected run: lab user, params, metrics, artifacts, registry |
+| 14 | `lab_14a/b_*.png` | Swagger UI via Ingress; live `/predict` call (HTTP 200) |
+| 15 | `lab_15_prometheus_targets.png` | Prometheus: both pods UP |
+| 16 | `lab_16a/b_*.png` | Grafana dashboard under load |
+| 17 | `lab_17_results_saved_workspace.png` | results copied to the persistent `~/workspace` |
+
+**Notes from the lab run**
+- `~/workspace` is an AWS EFS (NFS) mount, which makes `pip install` there very slow. Run from `~` and use `./run_lab.sh save` to keep the results.
+- The VM screen locks after a few idle minutes. To turn this off for the session:
+  ```bash
+  for p in /lock/enabled /saver/enabled; do xfconf-query -c xfce4-screensaver -p $p -n -t bool -s false; done; pkill xfce4-screensaver
+  ```
