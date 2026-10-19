@@ -62,6 +62,6 @@ fi
 sudo sysctl -w fs.inotify.max_user_watches=524288 fs.inotify.max_user_instances=512 >/dev/null || true
 
 log "Versions"
-${PYOK:-python3.11} -V; docker --version; kubectl version --client 2>/dev/null | head -1; kind version
+${PYOK:-python3.11} -V; docker --version; kubectl version --client 2>/dev/null | head -1 || true; kind version
 docker info --format 'docker daemon OK: {{.ServerVersion}}, cgroup {{.CgroupVersion}}'
 log "Setup complete - next: ./run_lab.sh"

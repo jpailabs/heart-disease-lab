@@ -24,14 +24,14 @@ step_env() {
   .venv/bin/pip install -q --upgrade pip
   .venv/bin/pip install -q -r requirements.txt
   .venv/bin/pip install -q -e .
-  $PY --version; .venv/bin/pip list 2>/dev/null | grep -iE "^(scikit-learn|pandas|mlflow|fastapi) "
+  $PY --version; .venv/bin/pip list 2>/dev/null | grep -iE "^(scikit-learn|pandas|mlflow|fastapi) " || true
 }
 step_data()  { banner "2. Data acquisition + cleaning"; $PY scripts/download_data.py --force; }
 step_eda()   { banner "3. EDA figures"; $PY -m heart.eda | head -30; ls reports/figures; }
 step_train() {
   banner "4. Training + tuning + MLflow tracking"
   $PY -m heart.train --register 2>&1 | grep -E "heart.train|Registered|Created version"
-  cat models/model_metadata.json | head -25
+  head -25 models/model_metadata.json
 }
 step_test()  {
   banner "5. Lint + unit tests"
