@@ -17,6 +17,7 @@ cd heart-disease-lab
 ```
 
 ## 3. One-time setup (Python, Docker, kubectl, kind)
+Works on the Prayogshala Rocky Linux 9 image (dnf) and on Ubuntu (apt). It installs only what is missing; on the MLOps VM that is just `kubectl` and `kind`.
 ```bash
 ./lab_setup.sh
 ```
