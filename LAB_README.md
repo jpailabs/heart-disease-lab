@@ -9,9 +9,10 @@ This folder is a clean copy of the project. Models, MLflow runs and figures are 
 2. Launch the MLOps course lab. Wait for the VM to reach **RUNNING**, then click **Connect**.
 3. On the virtual desktop, open **Terminal Emulator**.
 
-## 2. Get the code into the persistent `workspace` folder
+## 2. Get the code
+`~/workspace` is persistent, but it's an AWS EFS network mount and slow for thousands of small files (a Python venv). So run from the VM's local disk, and save the results to `~/workspace` at the end (`./run_lab.sh save`, which is also the last step of a full run).
 ```bash
-cd ~/workspace            # persistent folder; anything outside it is lost on terminate
+cd ~
 git clone https://github.com/jpailabs/heart-disease-lab.git
 cd heart-disease-lab
 ```
@@ -40,6 +41,7 @@ Works on the Prayogshala Rocky Linux 9 image (dnf) and on Ubuntu (apt). It insta
 | `smoke` | 100 predictions through the Ingress plus a validation (422) check |
 | `mlflow` | starts the MLflow UI |
 | `status` | `kubectl` resources and the URLs to open |
+| `save` | copies the results (models, MLflow store, figures) to `~/workspace/heart-disease-lab-results` |
 
 ## 5. Open in Firefox (inside the VM)
 | URL | Screen |
@@ -50,5 +52,5 @@ Works on the Prayogshala Rocky Linux 9 image (dnf) and on Ubuntu (apt). It insta
 | http://localhost:3030 | Grafana dashboard "Heart Disease API" |
 
 ## 6. Before leaving
-- Copy anything you want to keep into `~/workspace`.
+- Run `./run_lab.sh save` so the results are copied to `~/workspace`.
 - Use **Stop VM** to resume later, or **Terminate VM** when you're finished.

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Run the whole assignment pipeline inside the lab VM, step by step.
+# Run from the VM's local disk (e.g. ~/heart-disease-lab): ~/workspace is a slow network (EFS) mount.
 # Usage: ./run_lab.sh            (all steps)
-#        ./run_lab.sh <step>     (one of: env data eda train test docker k8s smoke mlflow status)
+#        ./run_lab.sh <step>     (one of: env data eda train test docker k8s smoke mlflow status save)
 set -euo pipefail
 cd "$(dirname "$0")"
 PY=.venv/bin/python
@@ -57,6 +58,14 @@ step_mlflow() {
         --host 127.0.0.1 --port 5050 > mlflow-ui.log 2>&1 &
   sleep 5; echo "MLflow UI: http://localhost:5050"
 }
+step_save() {
+  # ~/workspace is the persistent (EFS) folder; copy results there, skipping the venv.
+  banner "Save results to ~/workspace"
+  DEST=~/workspace/heart-disease-lab-results
+  mkdir -p "$DEST"
+  rsync -a --exclude .venv --exclude .git --exclude '__pycache__' ./ "$DEST"/
+  ls "$DEST"; echo "saved to $DEST"
+}
 step_status() {
   banner "Status"
   kubectl get nodes; echo; kubectl get all,ingress -n heart-mlops; echo; kubectl get pods,svc -n monitoring
@@ -68,5 +77,5 @@ step_status() {
 }
 
 if [ $# -gt 0 ]; then "step_$1"; exit; fi
-for s in env data eda train test docker k8s smoke mlflow status; do "step_$s"; done
+for s in env data eda train test docker k8s smoke mlflow status save; do "step_$s"; done
 banner "ALL STEPS COMPLETED"
